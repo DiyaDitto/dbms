@@ -1,0 +1,92 @@
+Create the following two tables:
+College consisting of college-code, college-name, address
+Faculty consisting of fields College-code, faculty-code, faculty-name, qualification, experience (in no. of
+years), department, address.
+The field college-code is foreign key.
+Generate Queries for the following.
+
+
+
+
+
+use college;
+SELECT * FROM College;
++--------------+--------------+---------+
+| college_code | college_name | address |
++--------------+--------------+---------+
+|            1 | Cec          | Chn     |
+|            2 | Cet          | Tvm     |
+|            3 | stg          | ktm     |
++--------------+--------------+---------+
+
+
+INSERT INTO Faculty(college_code,faculty_code,faculty_name,qualification,experience,department,address)
+    -> VALUES(1,01,'a','bca',5,'cs','xyz'),
+    -> (1,02,'b','btech',2,'ec','mvk'),
+    -> (2,04,'c','btech',15,'cs','banglore');
+
+SELECT * FROM Faculty;
++--------------+--------------+--------------+---------------+------------+------------+----------+
+| faculty_code | college_code | faculty_name | qualification | experience | department | address  |
++--------------+--------------+--------------+---------------+------------+------------+----------+
+|            1 |            1 | a            | bca           |          5 | cs         | xyz      |
+|            2 |            1 | b            | btech         |          2 | ec         | mvk      |
+|            4 |            2 | c            | btech         |         15 | cs         | banglore |
+|            5 |            1 | f            | btech         |          3 | cs         | abc      |
++--------------+--------------+--------------+---------------+------------+------------+----------+
+
+
+1)List all faulty members of a specified college whose experience is greater than or equal to 10 years.
+
+SELECT faculty_name FROM Faculty WHERE college_code=2 AND experience >= 10;
++--------------+
+| faculty_name |
++--------------+
+| c            |
++--------------+
+
+2)List all Faculty Members of a specified college who have at least 10 years of experience but not having
+M.Tech Degree.
+
+SELECT faculty_name FROM Faculty WHERE experience >=1 AND college_code=1 AND qualification!='btech';
++--------------+
+| faculty_name |
++--------------+
+| a            |
++--------------+
+
+
+3)List out the Faculty of a specified college department wise in non decreasing order of their seniority.
+
+SELECT faculty_name,department,experience FROM Faculty  WHERE college_code=1 ORDER BY department,experience;
++--------------+------------+------------+
+| faculty_name | department | experience |
++--------------+------------+------------+
+| f            | cs         |          3 |
+| a            | cs         |          5 |
+| b            | ec         |          2 |
++--------------+------------+------------+
+
+
+4)List out the Names of the Colleges having more than a specified number of faculty members.
+
+SELECT college_name FROM College WHERE college_code IN( SELECT college_code FROM Faculty GROUP BY college_code HAVING COUNT(faculty_code)>2);
++--------------+
+| college_name |
++--------------+
+| Cec          |
++--------------+
+
+
+5)List out the names of the colleges having the least number of faculties and the largest number of
+faculty.
+
+(SELECT college_name, (SELECT COUNT(*) FROM Faculty WHERE Faculty.college_code=College.college_code) AS facount FROM College ORDER BY facount DESC LIMIT 1) 
+UNION ALL
+(SELECT college_name, (SELECT COUNT(*) FROM Faculty WHERE Faculty.college_code=College.college_code) AS facount FROM College ORDER BY facount ASC LIMIT 1);
++--------------+---------+
+| college_name | facount |
++--------------+---------+
+| Cec          |       3 |
+| stg          |       0 |
++--------------+---------+
