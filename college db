@@ -1,0 +1,39 @@
+CREATE DATABASE college;
+
+USE college;
+
+CREATE TABLE Student (
+    roll_no INTEGER,
+    name VARCHAR(255),
+    dob DATE,
+    address TEXT,
+    phone_no VARCHAR(20),
+    blood_grp VARCHAR(10)
+);
+
+CREATE TABLE Course (
+    Course_id INTEGER,
+    Course_name VARCHAR(255),
+    course_duration INTEGER
+);
+
+SHOW TABLES;
+
+DESCRIBE Student;
+
+ALTER TABLE Student
+DROP COLUMN blood_grp;
+
+ALTER TABLE Student
+ADD Adar_no NUMBER;
+
+ALTER TABLE Student
+MODIFY phone_no INT;
+
+DROP TABLE Student;
+DROP TABLE Course;
+
+DROP DATABASE college;
+
+
+
